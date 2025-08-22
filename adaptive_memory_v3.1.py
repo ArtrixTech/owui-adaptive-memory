@@ -1466,19 +1466,32 @@ Your output must be valid JSON only. No additional text.""",
             logger.warning("Embedding feature guard active. Skipping embedding-dependent memory operations.")
 
 
-        # --- Process Incoming Message ---
-        final_message = None
+        # --- Process Incoming Message (MODIFIED FOR MULTIMODAL) ---
+        raw_content = None
+        final_message = "" # Initialize as an empty string
+
         # 1) Explicit stream=False (non-streaming completion requests)
         if body.get("stream") is False and body.get("messages"):
-            final_message = body["messages"][-1].get("content")
+            raw_content = body["messages"][-1].get("content")
 
         # 2) Streaming mode – grab final message when "done" flag arrives
         elif body.get("stream") is True and body.get("done", False):
-            final_message = body.get("message", {}).get("content")
-
+            raw_content = body.get("message", {}).get("content")
+        
         # 3) Fallback – many WebUI front-ends don't set a "stream" key at all.
-        if final_message is None and body.get("messages"):
-            final_message = body["messages"][-1].get("content")
+        if raw_content is None and body.get("messages"):
+            raw_content = body["messages"][-1].get("content")
+        
+        # --- Extract text from raw_content (handles both string and list) ---
+        if isinstance(raw_content, str):
+            # It's a simple text message
+            final_message = raw_content
+        elif isinstance(raw_content, list):
+            # It's a multi-modal message, find the text part
+            for item in raw_content:
+                if isinstance(item, dict) and item.get("type") == "text":
+                    final_message = item.get("text", "")
+                    break # Found the text part, no need to look further
 
         # --- Command Handling ---
         # Check if the final message is a command before processing memories
