@@ -1968,7 +1968,7 @@ Your output must be valid JSON only. No additional text.""",
                 {
                     "type": "status",
                     "data": {
-                        "description": "📝 Extracting potential new memories from your message…",
+                        "description": "Extracting potential new memories from your message...",
                         "done": False,
                     },
                 },
@@ -1998,7 +1998,7 @@ Your output must be valid JSON only. No additional text.""",
                         {
                             "type": "status",
                             "data": {
-                                "description": "⏸️ Adaptive Memory is disabled in your settings – skipping memory save.",
+                                "description": "Adaptive Memory is disabled in your settings. Skipping memory save.",
                                 "done": True,
                             },
                         },
@@ -2012,7 +2012,7 @@ Your output must be valid JSON only. No additional text.""",
                     {
                         "type": "status",
                         "data": {
-                            "description": "⚠️ Unable to access memory settings – aborting memory save process.",
+                            "description": "Unable to access memory settings. Aborting memory save process.",
                             "done": True,
                         },
                     },
@@ -2060,7 +2060,7 @@ Your output must be valid JSON only. No additional text.""",
                     {
                         "type": "status",
                         "data": {
-                            "description": f"⚠️ Memory error: {str(e)}",
+                            "description": f"Memory error: {str(e)}",
                             "done": True,
                         },
                     },
@@ -2209,7 +2209,7 @@ Your output must be valid JSON only. No additional text.""",
                 {
                     "type": "status",
                     "data": {
-                        "description": f"ℹ️ Discarded {low_confidence_discarded} potential memories due to low confidence (< {min_conf}).",
+                        "description": f"Discarded {low_confidence_discarded} potential memories due to low confidence (< {min_conf}).",
                         "done": False, # Indicate processing is ongoing
                     },
                 },
@@ -2231,7 +2231,7 @@ Your output must be valid JSON only. No additional text.""",
                     {
                         "type": "status",
                         "data": {
-                            "description": "⚠️ LLM response invalid - memory extraction failed.",
+                            "description": "LLM response invalid. Memory extraction failed.",
                             "done": True, # Mark as done even on error
                         },
                     },
@@ -2269,8 +2269,8 @@ Your output must be valid JSON only. No additional text.""",
                 logger.info("No valid memories to process after filtering/identification.")
                 if show_status and not self._error_message:
                     # Determine reason for no save
-                    final_status_reason = self._error_message or "filtered_or_duplicate"
-                    status_desc = f"ℹ️ Memory save skipped – {final_status_reason.replace('_', ' ')}."
+                    final_status_reason = self._error_message or "Filtered_or_duplicate"
+                    status_desc = f"Memory save skipped. {final_status_reason.replace('_', ' ')}."
                     await self._safe_emit(
                         event_emitter,
                         {
@@ -2473,19 +2473,19 @@ Rate the relevance of EACH memory to the current user message."""
             if saved_count > 0:
                 # Check if it was the shortcut save
                 if any(op.get("content") == user_message.strip() for op in saved_operations_list):
-                     status_desc = f"✅ Saved 1 memory via shortcut ({elapsed_time:.2f}s)"
+                     status_desc = f"Saved 1 memory via shortcut ({elapsed_time:.2f}s)"
                 else:
                     plural = "memory" if saved_count == 1 else "memories"
-                    status_desc = f"✅ Added {saved_count} new {plural} to your memory bank ({elapsed_time:.2f}s)"
+                    status_desc = f"Added {saved_count} new {plural} to your memory bank ({elapsed_time:.2f}s)"
             else:
                 # Build smarter status based on duplicate counters
                 if getattr(self, "_duplicate_refreshed", 0):
-                    status_desc = f"✅ Memory refreshed (duplicate confirmed) ({elapsed_time:.2f}s)"
+                    status_desc = f"Memory refreshed (duplicate confirmed) ({elapsed_time:.2f}s)"
                 elif getattr(self, "_duplicate_skipped", 0):
-                    status_desc = f"✅ Preference already saved – duplicate ignored ({elapsed_time:.2f}s)"
+                    status_desc = f"Preference already saved. Duplicate ignored ({elapsed_time:.2f}s)"
                 else:
                     final_status_reason = self._error_message or "filtered_or_duplicate"
-                    status_desc = f"⚠️ Memory save skipped – {final_status_reason.replace('_', ' ')} ({elapsed_time:.2f}s)"
+                    status_desc = f"Memory save skipped. {final_status_reason.replace('_', ' ')} ({elapsed_time:.2f}s)"
             await self._safe_emit(
                 event_emitter,
                 {
@@ -3923,7 +3923,7 @@ Current datetime: {current_datetime.strftime('%A, %B %d, %Y %H:%M:%S')} ({curren
             total_saved = new_count + update_count + delete_count
 
             # Use bold italic styling with an emoji as requested
-            confirmation = f"**_Memory: 🧠 Saved {total_saved} memories..._**"
+            confirmation = f"**_Memory: Saved {total_saved} memories..._**"
 
         # If no confirmation necessary, exit early
         if not confirmation:
